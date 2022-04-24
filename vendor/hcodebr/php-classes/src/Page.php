@@ -17,6 +17,8 @@ class Page {
 	//Metodo construtor
     public function __construct($opts = array(), $tpl_dir = "./views/")
     {   
+		//$this->defaults["data"]["session"] = $_SESSION;
+
         $this->options = array_merge($this->defaults, $opts);
  
         $config = array(
@@ -34,13 +36,8 @@ class Page {
         if ( $this->options["header"] === true) $this->tpl->draw("header");
  
     }
-	public function __destruct()
-	{
 
-		if ($this->options['footer'] === true) $this->tpl->draw("footer", false);
-
-	}
-
+	
 	private function setData($data = array()){
  
 		foreach ($data as $key => $value) {
@@ -49,6 +46,7 @@ class Page {
 	 
 		}
 	}
+
 	public function setTpl($tplname, $data = array(), $returnHTML = false)
 	{
 
@@ -57,6 +55,14 @@ class Page {
 		return $this->tpl->draw($tplname, $returnHTML);
 
 	}
+
+	public function __destruct()
+	{
+
+		if ($this->options['footer'] === true) $this->tpl->draw("footer", false);
+
+	}
+
 
 }
 
