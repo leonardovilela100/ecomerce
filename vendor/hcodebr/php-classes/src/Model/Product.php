@@ -17,6 +17,19 @@ class Product extends Model {
 
     }
 
+        public static function checkList($list)
+        {
+            foreach ($list as &$row) {
+                
+                $p = new Product();
+                $p->setData($row);
+                $row = $p->getValues();
+
+            }
+
+            return $list;
+        }
+
     public function save()
     {
         $sql = new Sql();
@@ -70,7 +83,7 @@ class Product extends Model {
         "products" . DIRECTORY_SEPARATOR .
         $this->getidproduct() . ".jpg"
          )) {
-            $url = "/res/site/img/products" . $this->getidproduct() . ".jpg";
+            $url = "/res/site/img/products/" . $this->getidproduct() . ".jpg";
 
          } else {
 
@@ -78,7 +91,7 @@ class Product extends Model {
 
          }
 
-         $this->setdesphoto($url);
+         return $this->setdesphoto($url);
 
     }
 
@@ -93,44 +106,43 @@ class Product extends Model {
 
     }
 
-    public function setPhoto($file)
-    {
-
-        $extension = explode('.', $file['name']);
-        $extension = end($extension);//PAREI AQUI NA  AULA 11  37:25MIN CRIANDO IAMGENS E RECEBENDO IMAGENS DIFERENTES
-
-        switch ($extension) {
-
-            case "jpg":
-            case "jpeg":
-            $image = \imagecreatefromjpeg($file["tpm_name"]);
-            break;
-
-            case "gif":
-            $image = \imagecreatefromgif($file["tpm_name"]);
-            break;
-
-            case "png":
-            $image = \imagecreatefrompng($file["tpm_name"]);
-            break;
-
-        }
-
-        $dist =   $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR .
-        "res" . DIRECTORY_SEPARATOR .
-         "site" . DIRECTORY_SEPARATOR .
-        "img" . DIRECTORY_SEPARATOR .
-        "products" . DIRECTORY_SEPARATOR .
-        $this->getidproduct() . ".jpg";
-
-        imagejpeg($image, $dist);
-
-        imagedestroy($image);
-
-        $this->checkPhoto();
-
-    }
-
+    public function setPhoto($file) 
+	{
+		
+		$extension = explode('.', $file['name']);
+		$extension = end($extension);
+		
+		switch ($extension) {
+				
+			case "jpg":
+			case "jpeg":
+				
+				$image = imagecreatefromjpeg($file["tmp_name"]);
+				
+				break;
+				
+			case "gif":
+				
+				$image = imagecreatefromgif($file["tmp_name"]);
+				
+				break;
+				
+			case "png":
+				
+				$image = imagecreatefrompng($file["tmp_name"]);
+				
+				break;
+		}
+		
+		$dist = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "site" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR . "products" . DIRECTORY_SEPARATOR . $this->getidproduct() . ".jpg";
+		
+		imagejpeg($image, $dist);
+		imagedestroy($image);
+		
+		$this->checkPhoto();
+		
+	}
+	
 }
 
 ?>
